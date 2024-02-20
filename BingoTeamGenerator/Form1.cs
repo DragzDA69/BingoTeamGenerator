@@ -12,8 +12,6 @@ namespace BingoTeamGenerator
     {
         public int NumberOfTeams { get; set; }
         public List<PlayerInfo> PlayersList { get; set; }
-        //public List<Team> SortedTeams { get; set; }
-        public TeamBalancer Balancer { get; set; }
 
         public Form1()
         {
@@ -22,7 +20,18 @@ namespace BingoTeamGenerator
             PlayersList = new List<PlayerInfo>();
         }
 
-        private void LoadFileButton_Click(object sender, System.EventArgs e)
+        private void ClearAllButton_Click(object sender, EventArgs e)
+        {
+            PlayersList.Clear();
+            PlayersDataGrid.DataSource = null;
+            TeamsDataGrid.DataSource = null;
+            NumberOfTeams = 2;
+            NumTeamsTextbox.Text = "2";
+            TotalLoadedPlayersLabel.Text = "Total: 0";
+            TotalGeneratedTeamsLabel.Text = "Total: 0";
+        }
+
+        private void LoadFileButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -30,14 +39,21 @@ namespace BingoTeamGenerator
                 {
                     Title = "Load Player List",
                     Filter = "Text files (*.txt)|*.txt",
-                    InitialDirectory = "C:\\Users\\Zach\\Desktop\\Team Generator",  // TODO : Remove this and default to C:\
-                    //fDialog.InitialDirectory = @"C:\";    // TODO : Uncomment
+                    InitialDirectory =
+                #if DEBUG
+                    "C:\\Users\\Zach\\Desktop\\Team Generator",
+                #else
+                    "C:\\",
+                #endif
                     CheckFileExists = true,
                     CheckPathExists = true
                 };
 
                 if (fDialog.ShowDialog() == DialogResult.OK)
                 {
+                    PlayersList.Clear();
+                    TeamsDataGrid.DataSource = null;
+
                     var usersRaw = File.ReadAllText(fDialog.FileName).Split(';');
                     foreach (var user in usersRaw)
                     {
@@ -54,8 +70,8 @@ namespace BingoTeamGenerator
 
                     PlayersList.ForEach(x => dt.Rows.Add(x.Username, x.Tier));
 
-                    PlayersListGrid.DataSource = dt;
-                    LoadedPlayersTotalLabel.Text = "Total: " + PlayersList.Count.ToString();
+                    PlayersDataGrid.DataSource = dt;
+                    TotalLoadedPlayersLabel.Text = "Total: " + PlayersList.Count.ToString();
 
                     MessageBox.Show("Player list successfully loaded!");
                 }
@@ -84,6 +100,11 @@ namespace BingoTeamGenerator
                 {
                     MessageBox.Show("Please enter a number");
                 }
+                if (NumberOfTeams < 2)
+                {
+                    MessageBox.Show("You must have at least 2 teams", "Not Enough Teams");
+                    return;
+                }
                 if (NumberOfTeams > PlayersList.Count)
                 {
                     MessageBox.Show("You can not have more teams then players", "To Many Teams");
@@ -92,8 +113,6 @@ namespace BingoTeamGenerator
 
                 var balancer = new TeamBalancer();
                 var balancedTeams = balancer.BalanceGroups(PlayersList, NumberOfTeams);
-
-                GeneratedPlayersLabel.Text = "Total2: " + balancedTeams.Count.ToString();
 
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Username", typeof(string));
@@ -111,7 +130,7 @@ namespace BingoTeamGenerator
                 });
 
                 TeamsDataGrid.DataSource = dt;
-                LoadedPlayersTotalLabel.Text = "Total: " + PlayersList.Count.ToString();
+                TotalGeneratedTeamsLabel.Text = "Total: " + balancedTeams.Count.ToString();
             }
             catch (Exception ex)
             {

@@ -1,0 +1,11 @@
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\bin\Release\BingoTeamGenerator.exe.config
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\bin\Release\BingoTeamGenerator.exe
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\bin\Release\BingoTeamGenerator.pdb
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.csproj.AssemblyReference.cache
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.csproj.SuggestedBindingRedirects.cache
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.Form1.resources
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.Properties.Resources.resources
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.csproj.GenerateResource.cache
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.csproj.CoreCompileInputs.cache
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.exe
+C:\Development\BingoTeamGenerator\BingoTeamGenerator\obj\Release\BingoTeamGenerator.pdb
