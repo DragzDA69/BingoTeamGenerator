@@ -13,6 +13,7 @@ namespace BingoTeamGenerator
     {
         public int NumberOfTeams { get; set; }
         public List<PlayerInfo> PlayersList { get; set; }
+        public List<Team> TeamsList { get; set; }
 
         public Form1()
         {
@@ -23,9 +24,12 @@ namespace BingoTeamGenerator
 
         private void ClearAllButton_Click(object sender, EventArgs e)
         {
+            PlayersList.Clear();
+            PlayersDataGrid.DataSource = null;
             TeamsDataGrid.DataSource = null;
             NumberOfTeams = 2;
             NumTeamsTextbox.Text = "2";
+            TotalLoadedPlayersLabel.Text = "Total: 0";
             TotalGeneratedTeamsLabel.Text = "Total: 0";
         }
 
@@ -35,7 +39,7 @@ namespace BingoTeamGenerator
             {
                 OpenFileDialog fDialog = new OpenFileDialog
                 {
-                    Title = "Load Player List",
+                    Title = "Load Players List",
                     Filter = "CSV (*.csv)|*.csv",
                     InitialDirectory =
                 #if DEBUG
@@ -87,7 +91,6 @@ namespace BingoTeamGenerator
             }
         }
 
-
         private void GenerateTeamsButton_Click(object sender, EventArgs e)
         {
             try
@@ -112,14 +115,14 @@ namespace BingoTeamGenerator
                     return;
                 }
 
-                var balancedTeams = TeamBalancer.BalanceGroups(PlayersList, NumberOfTeams);
+                TeamsList = TeamBalancer.BalanceGroups(PlayersList, NumberOfTeams);
 
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Username", typeof(string));
                 dt.Columns.Add("Discord", typeof(string));
                 dt.Columns.Add("Tier", typeof(string));
 
-                balancedTeams.ForEach(team =>
+                TeamsList.ForEach(team =>
                 {
                     if (team.TeamNumber > 1)
                         dt.Rows.Add(string.Empty, "", "");
@@ -131,7 +134,40 @@ namespace BingoTeamGenerator
                 });
 
                 TeamsDataGrid.DataSource = dt;
-                TotalGeneratedTeamsLabel.Text = "Total: " + balancedTeams.Count.ToString();
+                TotalGeneratedTeamsLabel.Text = "Total: " + TeamsList.Count.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ExportBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog dlg = new SaveFileDialog
+                {
+                    FileName = "Bingo Teams",
+                    DefaultExt = ".csv",
+                    Filter = "CSV (.csv)|*.csv"
+                };
+
+                var result = dlg.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    var csvString = "Username,Discord,Tier";
+                    foreach (var team in TeamsList)
+                    {
+                        csvString += Environment.NewLine + team.ConvertToCsv();
+                    }
+                    File.WriteAllText(dlg.FileName, csvString);
+                    MessageBox.Show("File saved successfully!");
+                }
+                else
+                {
+                    MessageBox.Show("No save location was selected!");
+                }
             }
             catch (Exception ex)
             {

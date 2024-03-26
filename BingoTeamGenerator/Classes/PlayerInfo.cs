@@ -3,6 +3,10 @@ namespace BingoTeamGenerator.Classes
 {
     public class PlayerInfo
     {
+        public string Username { get; set; }
+        public string Discord { get; set; }
+        public int Tier { get; set; }
+
         public PlayerInfo() { }
         public PlayerInfo(string username, string discord, string tier)
         {
@@ -17,9 +21,10 @@ namespace BingoTeamGenerator.Classes
             Tier = tier;
         }
 
+        public string ConvertToCsv()
+        {
+            return Username + "," + Discord + "," + Tier;
+        }
 
-        public string Username { get; set; }
-        public string Discord { get; set; }
-        public int Tier { get; set; }
     }
 }

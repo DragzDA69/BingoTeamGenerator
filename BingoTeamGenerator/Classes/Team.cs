@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace BingoTeamGenerator.Classes
@@ -14,6 +15,14 @@ namespace BingoTeamGenerator.Classes
             TeamNumber = teamNumber;
         }
 
+        public string ConvertToCsv()
+        {
+            var csv = $"Team {TeamNumber},,";
+            Members.ForEach(p => csv += Environment.NewLine + p.ConvertToCsv());
+            csv += Environment.NewLine + ",,";
+            return csv;
+        }
+
         public (bool, string) AddNewMember(PlayerInfo info)
         {
             try
@@ -21,7 +30,7 @@ namespace BingoTeamGenerator.Classes
                 Members.Add(info);
                 return (true, "Ok");
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 return (false, e.Message);
             }
@@ -34,7 +43,7 @@ namespace BingoTeamGenerator.Classes
                 Members.Add(new PlayerInfo(username, discord, tier));
                 return (true, "Ok");
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 return (false, e.Message);
             }
