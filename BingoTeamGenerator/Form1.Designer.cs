@@ -48,9 +48,9 @@
             this.TitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TitleLabel.Location = new System.Drawing.Point(327, 34);
             this.TitleLabel.Name = "TitleLabel";
-            this.TitleLabel.Size = new System.Drawing.Size(312, 31);
+            this.TitleLabel.Size = new System.Drawing.Size(308, 31);
             this.TitleLabel.TabIndex = 0;
-            this.TitleLabel.Text = "Dragz Team Generator";
+            this.TitleLabel.Text = "Bingo Team Generator";
             // 
             // LoadFileButton
             // 
@@ -64,7 +64,7 @@
             // 
             // GenerateTeamsButton
             // 
-            this.GenerateTeamsButton.Location = new System.Drawing.Point(736, 141);
+            this.GenerateTeamsButton.Location = new System.Drawing.Point(432, 379);
             this.GenerateTeamsButton.Name = "GenerateTeamsButton";
             this.GenerateTeamsButton.Size = new System.Drawing.Size(116, 29);
             this.GenerateTeamsButton.TabIndex = 1;
@@ -141,7 +141,7 @@
             // 
             // ClearAllButton
             // 
-            this.ClearAllButton.Location = new System.Drawing.Point(433, 141);
+            this.ClearAllButton.Location = new System.Drawing.Point(735, 141);
             this.ClearAllButton.Name = "ClearAllButton";
             this.ClearAllButton.Size = new System.Drawing.Size(116, 29);
             this.ClearAllButton.TabIndex = 1;

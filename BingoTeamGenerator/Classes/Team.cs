@@ -27,11 +27,11 @@ namespace BingoTeamGenerator.Classes
             }
         }
 
-        public (bool, string) AddNewMember(string username, int tier)
+        public (bool, string) AddNewMember(string username, string discord, int tier)
         {
             try
             {
-                Members.Add(new PlayerInfo(username, tier));
+                Members.Add(new PlayerInfo(username, discord, tier));
                 return (true, "Ok");
             }
             catch (System.Exception e)

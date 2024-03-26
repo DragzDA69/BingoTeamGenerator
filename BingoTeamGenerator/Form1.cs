@@ -1,5 +1,6 @@
 ﻿using BingoTeamGenerator.Classes;
 using BingoTeamGenerator.Utilities;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,12 +23,9 @@ namespace BingoTeamGenerator
 
         private void ClearAllButton_Click(object sender, EventArgs e)
         {
-            PlayersList.Clear();
-            PlayersDataGrid.DataSource = null;
             TeamsDataGrid.DataSource = null;
             NumberOfTeams = 2;
             NumTeamsTextbox.Text = "2";
-            TotalLoadedPlayersLabel.Text = "Total: 0";
             TotalGeneratedTeamsLabel.Text = "Total: 0";
         }
 
@@ -38,7 +36,7 @@ namespace BingoTeamGenerator
                 OpenFileDialog fDialog = new OpenFileDialog
                 {
                     Title = "Load Player List",
-                    Filter = "Text files (*.txt)|*.txt",
+                    Filter = "CSV (*.csv)|*.csv",
                     InitialDirectory =
                 #if DEBUG
                     "C:\\Users\\Zach\\Desktop\\Team Generator",
@@ -54,21 +52,24 @@ namespace BingoTeamGenerator
                     PlayersList.Clear();
                     TeamsDataGrid.DataSource = null;
 
-                    var usersRaw = File.ReadAllText(fDialog.FileName).Split(';');
-                    foreach (var user in usersRaw)
+                    using (TextFieldParser tfp = new TextFieldParser(fDialog.FileName))
                     {
-                        if (!string.IsNullOrWhiteSpace(user))
+                        tfp.TextFieldType = FieldType.Delimited;
+                        tfp.SetDelimiters(",");
+                        while (!tfp.EndOfData)
                         {
-                            var userSplit = user.Replace("\r\n", string.Empty).Split(',');
-                            PlayersList.Add(new PlayerInfo(userSplit[0], userSplit[1]));
+                            var data = tfp.ReadFields();
+                            if (data[2].ToLower() != "tier") 
+                                PlayersList.Add(new PlayerInfo(data[0], data[1], data[2]));
                         }
                     }
 
                     DataTable dt = new DataTable();
                     dt.Columns.Add("Username", typeof(string));
-                    dt.Columns.Add("Tier", typeof(int));
+                    dt.Columns.Add("Discord", typeof(string));
+                    dt.Columns.Add("Tier", typeof(string));
 
-                    PlayersList.ForEach(x => dt.Rows.Add(x.Username, x.Tier));
+                    PlayersList.ForEach(x => dt.Rows.Add(x.Username, x.Discord, x.Tier));
 
                     PlayersDataGrid.DataSource = dt;
                     TotalLoadedPlayersLabel.Text = "Total: " + PlayersList.Count.ToString();
@@ -111,18 +112,18 @@ namespace BingoTeamGenerator
                     return;
                 }
 
-                var balancer = new TeamBalancer();
-                var balancedTeams = balancer.BalanceGroups(PlayersList, NumberOfTeams);
+                var balancedTeams = TeamBalancer.BalanceGroups(PlayersList, NumberOfTeams);
 
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Username", typeof(string));
-                dt.Columns.Add("Tier", typeof(int));
+                dt.Columns.Add("Discord", typeof(string));
+                dt.Columns.Add("Tier", typeof(string));
 
                 balancedTeams.ForEach(team =>
                 {
                     if (team.TeamNumber > 1)
-                        dt.Rows.Add(string.Empty, 0);
-                    dt.Rows.Add("Team: " + team.TeamNumber, 0);
+                        dt.Rows.Add(string.Empty, "", "");
+                    dt.Rows.Add("Team: " + team.TeamNumber, "", "");
                     team.Members.ForEach(member =>
                     {
                         dt.Rows.Add(member.Username, member.Tier);
@@ -145,5 +146,6 @@ namespace BingoTeamGenerator
                 NumberOfTeams = numOfTeams;
             }
         }
+
     }
 }

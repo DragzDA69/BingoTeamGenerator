@@ -5,12 +5,14 @@ using System.Linq;
 
 namespace BingoTeamGenerator.Utilities
 {
-    public class TeamBalancer
+    public static class TeamBalancer
     {
-        private Random random = new Random(); // Initialize Random object
 
-        public List<Team> BalanceGroups(List<PlayerInfo> users, int totalGroups)
+        public static List<Team> BalanceGroups(List<PlayerInfo> users, int totalGroups)
         {
+            // Initialize Random object
+            Random random = new Random();
+            
             // Shuffle users
             var shuffledUsers = users.OrderBy(x => random.Next()).ToList();
 
@@ -39,7 +41,7 @@ namespace BingoTeamGenerator.Utilities
             return teams;
         }
 
-        private void RebalanceTeams(List<Team> teams, int idealCountPerTeam)
+        private static void RebalanceTeams(List<Team> teams, int idealCountPerTeam)
         {
             // Iterate through each team
             foreach (var team in teams)
